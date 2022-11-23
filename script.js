@@ -81,6 +81,16 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce(
+    (accumulator, movement) => accumulator + movement,
+    0
+  );
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+calcDisplayBalance(account1.movements);
+
 const createUsernames = function (accounts) {
   accounts.forEach(function (account) {
     account.username = account.owner
@@ -93,6 +103,17 @@ const createUsernames = function (accounts) {
 
 createUsernames(accounts);
 
-console.log(accounts);
-// const user = 'Ayush Jain';
-// createUsernames()
+const deposits = account1.movements.filter(movement => movement > 0);
+console.log(deposits);
+const withdrawal = account1.movements.filter(movement => movement < 0);
+console.log(withdrawal);
+const max = account1.movements.reduce(
+  (max, movement) => (max < movement ? movement : max),
+  account1.movements[0]
+);
+const euroToUsd = 1.1;
+const totalDepositsUSD = account1.movements
+  .filter(movement => movement > 0)
+  .map(movement => movement * 1.1)
+  .reduce((accumulator, movement) => accumulator + movement, 0);
+console.log(totalDepositsUSD);
