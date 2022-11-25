@@ -72,7 +72,7 @@ const displayMovements = function (movements) {
         <div class="movements__type movements__type--${type}">${
       index + 1
     } ${type}</div>
-        <div class="movements__value">${movement}</div>
+        <div class="movements__value">${movement} EUR</div>
       </div>
     `;
     containerMovements.insertAdjacentHTML('afterBegin', html);
@@ -91,6 +91,30 @@ const calcDisplayBalance = function (movements) {
 
 calcDisplayBalance(account1.movements);
 
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(movement => movement > 0)
+    .reduce((accumulator, movement) => accumulator + movement);
+
+  labelSumIn.textContent = `${incomes} EUR`;
+
+  const out = movements
+    .filter(movement => movement < 0)
+    .reduce((accumulator, movement) => accumulator + movement);
+
+  labelSumOut.textContent = `${Math.abs(out)} EUR`;
+
+  const interest = movements
+    .filter(movement => movement > 0)
+    .map(deposit => deposit * (1.2 / 100))
+    .filter(interest => interest >= 1)
+    .reduce((accumulator, interest) => accumulator + interest);
+
+  labelSumInterest.textContent = `${interest} EUR`;
+};
+
+calcDisplaySummary(account1.movements);
+
 const createUsernames = function (accounts) {
   accounts.forEach(function (account) {
     account.username = account.owner
@@ -105,15 +129,32 @@ createUsernames(accounts);
 
 const deposits = account1.movements.filter(movement => movement > 0);
 console.log(deposits);
+
 const withdrawal = account1.movements.filter(movement => movement < 0);
 console.log(withdrawal);
+
 const max = account1.movements.reduce(
   (max, movement) => (max < movement ? movement : max),
   account1.movements[0]
 );
+
 const euroToUsd = 1.1;
 const totalDepositsUSD = account1.movements
   .filter(movement => movement > 0)
   .map(movement => movement * 1.1)
   .reduce((accumulator, movement) => accumulator + movement, 0);
 console.log(totalDepositsUSD);
+
+const firstWithdrawl = account1.movements.find(movement => movement < 0);
+console.log(firstWithdrawl);
+
+const account = accounts.find(account => account.owner === 'Jessica Davis');
+console.log(account);
+
+for (const account of accounts) {
+  if (account.owner === 'Jessica Davis') console.log(account);
+}
+
+btnLogin.addEventListener('click', function (event) {
+  event.preventDefault();
+});
