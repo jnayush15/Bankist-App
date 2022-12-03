@@ -79,30 +79,30 @@ const displayMovements = function (movements) {
   });
 };
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce(
+const calcDisplayBalance = function (account) {
+  account.balance = account.movements.reduce(
     (accumulator, movement) => accumulator + movement,
     0
   );
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${account.balance} EUR`;
 };
 
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
     .filter(movement => movement > 0)
     .reduce((accumulator, movement) => accumulator + movement);
 
   labelSumIn.textContent = `${incomes} EUR`;
 
-  const out = movements
+  const out = account.movements
     .filter(movement => movement < 0)
     .reduce((accumulator, movement) => accumulator + movement);
 
   labelSumOut.textContent = `${Math.abs(out)} EUR`;
 
-  const interest = movements
+  const interest = account.movements
     .filter(movement => movement > 0)
-    .map(deposit => deposit * (1.2 / 100))
+    .map(deposit => deposit * (account.interestRate / 100))
     .filter(interest => interest >= 1)
     .reduce((accumulator, interest) => accumulator + interest);
 
@@ -138,15 +138,29 @@ btnLogin.addEventListener('click', function (event) {
 
     containerApp.style.opacity = 100;
 
+    inputLoginUsername.value = inputLoginPin.value = '';
+
+    inputLoginPin.blur();
+
     // Display movements
     displayMovements(currentAccount.movements);
 
     // Display balance
-    calcDisplayBalance(currentAccount.movements);
+    calcDisplayBalance(currentAccount);
 
     // Display summary
-    calcDisplaySummary(currentAccount.movements);
+    calcDisplaySummary(currentAccount);
   }
+});
+
+btnTransfer.addEventListener('click', function (event) {
+  // prevent form from submitting
+  event.preventDefault();
+
+  const amount = Number(inputTransferAmount.value);
+  const recieverAccount = accounts.find(
+    account => account.username === inputTransferTo.value
+  );
 });
 
 // const deposits = account1.movements.filter(movement => movement > 0);
