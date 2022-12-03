@@ -79,8 +79,6 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce(
     (accumulator, movement) => accumulator + movement,
@@ -88,8 +86,6 @@ const calcDisplayBalance = function (movements) {
   );
   labelBalance.textContent = `${balance} EUR`;
 };
-
-calcDisplayBalance(account1.movements);
 
 const calcDisplaySummary = function (movements) {
   const incomes = movements
@@ -113,8 +109,6 @@ const calcDisplaySummary = function (movements) {
   labelSumInterest.textContent = `${interest} EUR`;
 };
 
-calcDisplaySummary(account1.movements);
-
 const createUsernames = function (accounts) {
   accounts.forEach(function (account) {
     account.username = account.owner
@@ -127,34 +121,58 @@ const createUsernames = function (accounts) {
 
 createUsernames(accounts);
 
-const deposits = account1.movements.filter(movement => movement > 0);
-console.log(deposits);
-
-const withdrawal = account1.movements.filter(movement => movement < 0);
-console.log(withdrawal);
-
-const max = account1.movements.reduce(
-  (max, movement) => (max < movement ? movement : max),
-  account1.movements[0]
-);
-
-const euroToUsd = 1.1;
-const totalDepositsUSD = account1.movements
-  .filter(movement => movement > 0)
-  .map(movement => movement * 1.1)
-  .reduce((accumulator, movement) => accumulator + movement, 0);
-console.log(totalDepositsUSD);
-
-const firstWithdrawl = account1.movements.find(movement => movement < 0);
-console.log(firstWithdrawl);
-
-const account = accounts.find(account => account.owner === 'Jessica Davis');
-console.log(account);
-
-for (const account of accounts) {
-  if (account.owner === 'Jessica Davis') console.log(account);
-}
+let currentAccount;
 
 btnLogin.addEventListener('click', function (event) {
+  // prevent form from submitting
   event.preventDefault();
+
+  currentAccount = accounts.find(
+    account => account.username === inputLoginUsername.value.toLowerCase()
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+
+    containerApp.style.opacity = 100;
+
+    // Display movements
+    displayMovements(currentAccount.movements);
+
+    // Display balance
+    calcDisplayBalance(currentAccount.movements);
+
+    // Display summary
+    calcDisplaySummary(currentAccount.movements);
+  }
 });
+
+// const deposits = account1.movements.filter(movement => movement > 0);
+// console.log(deposits);
+
+// const withdrawal = account1.movements.filter(movement => movement < 0);
+// console.log(withdrawal);
+
+// const max = account1.movements.reduce(
+//   (max, movement) => (max < movement ? movement : max),
+//   account1.movements[0]
+// );
+
+// const euroToUsd = 1.1;
+// const totalDepositsUSD = account1.movements
+//   .filter(movement => movement > 0)
+//   .map(movement => movement * 1.1)
+//   .reduce((accumulator, movement) => accumulator + movement, 0);
+// console.log(totalDepositsUSD);
+
+// const firstWithdrawl = account1.movements.find(movement => movement < 0);
+// console.log(firstWithdrawl);
+
+// const account = accounts.find(account => account.owner === 'Jessica Davis');
+// console.log(account);
+
+// for (const account of accounts) {
+//   if (account.owner === 'Jessica Davis') console.log(account);
+// }
